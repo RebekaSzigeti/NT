@@ -6,76 +6,69 @@ using namespace std;
 
 int main()
 {
-    vector<int> v;
     ifstream in("input.txt");
-    ofstream out("output.txt");
-    int n,m,x,y,nr=0;
+    int n, m,x,y;
     in >> n >> m;
-    int indul[n], vegez[n], sorrend[n];
-    for(int i=0;i<n;i++){
-        in >> x;
-        indul[i] = x;
-        in >> x;
-        vegez[i]=x;
-    }
-    for(int i=0;i<n;i++){
-        sorrend[i]=i+1;
-    }
-    int aux;
-    for(int i=0;i<n;i++){
-        for(int j=i+1;j<n;j++){
-           if( vegez[i]<vegez[j]){
-                aux = vegez[i];
-                vegez[i]=vegez[j];
-                vegez[j]=aux;
-
-                aux = sorrend[i];
-                sorrend[i]=sorrend[j];
-                sorrend[j]=aux;
-
-                aux = indul[i];
-                indul[i]=indul[j];
-                indul[j]=aux;
-
-
-           }
-
+    int v[n+1][n+1];
+    for(int i=0;i<n+1;i++){
+        for(int j=0;j<n+1;j++){
+            v[i][j]=0;
         }
     }
 
-    y=1;
-    int prev_y;
+    for(int i=0;i<m;i++){
+        in >> x >> y;
+        v[x][y]=1;
+        v[y][x]=1;
+    }
+    vector<int> zsakfalu;
+    int nr =0;
+    for(int i=1;i<n+1;i++){
+            for(int j=1;j<n+1;j++){
+                if(v[i][j]==1){
+                    nr++;
+                }
+            }
+            if(nr==1){
+                zsakfalu.push_back(i);
+            }
+            nr=0;
 
-    while(y!=m){
-         prev_y=y;
-        for(int i=0;i<n;i++){
-            if(y>=indul[i]){
-                y = vegez[i];
-                v.push_back(sorrend[i]);
-                nr++;
+    }
+
+
+    vector<int> faluk;
+    int z,p;
+    nr=0;
+    for(int i=0;i<zsakfalu.size();i++){
+        z = zsakfalu[i];
+        for(int j=1;j<n+1;j++){
+            if(v[z][j]==1){
+                y=j;
+                faluk.push_back(y);
                 break;
             }
         }
-        if(prev_y==y){
-            break;
+        while(nr<2){
+              nr =0;
+            for(int j=1;j<n+1;j++){
+                if(v[y][j]==1){
+                    nr++;
+                    p=j;
+                }
+            }
+
+                y = p;
+                faluk.push_back(y);
+
+
         }
     }
 
-    if(y==prev_y){
-        cout << -1;
-    } else {
-        cout << nr-1 << endl;
-        for(int i=0;i<v.size();i++){
-            cout << v[i] << endl;
-        }
-
+    cout << faluk.size() << endl;
+    for(int i=0;i<faluk.size();i++){
+        cout << faluk[i] << " ";
     }
-
-
-
-
-
-
 
     return 0;
 }
